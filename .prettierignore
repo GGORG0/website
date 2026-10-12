@@ -1,0 +1,4 @@
+dist/
+.astro/
+.husky/
+pnpm-lock.yaml
