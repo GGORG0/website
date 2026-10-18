@@ -1,0 +1,187 @@
+---
+// prettier-ignore
+const keyboard = [
+  "esc", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "⌫",
+  "tab", "q", "w", "e", "r", "t", "y", "u", "i", "o", "p", "↵",
+  "⇧",   "a", "s", "d", "f", "g", "h", "j", "k", "l", ";", "⇧"
+];
+
+const text = "hello world↵";
+const step = 280;
+const leadIn = 600;
+const duration = leadIn + text.length * step + 1800;
+const animatedKeys = [...new Set(text)];
+const animationName = (key: string) =>
+  `keyboard-type-${key === " " ? "space" : key}`;
+const percent = (time: number) => `${((time / duration) * 100).toFixed(3)}%`;
+const released =
+  "transform: translateY(0); box-shadow: 0 3px 0 var(--key-shadow);";
+const pressed =
+  "transform: translateY(3px); box-shadow: 0 0 0 var(--key-shadow);";
+
+const typingKeyframes = animatedKeys
+  .map((key) => {
+    const presses = [...text]
+      .flatMap((character, index) => {
+        if (character !== key) return [];
+        const start = leadIn + index * step;
+        return [
+          `${percent(start)} { ${released} }`,
+          `${percent(start + 40)}, ${percent(start + 120)} { ${pressed} }`,
+          `${percent(start + 180)} { ${released} }`,
+        ];
+      })
+      .join("\n");
+    return `@keyframes ${animationName(key)} {
+      0%, 100% { ${released} }
+      ${presses}
+    }`;
+  })
+  .join("\n");
+---
+
+<style is:inline set:html={typingKeyframes} />
+
+<div
+  class="keyboard-scene"
+  style={`--typing-duration: ${duration}ms`}
+  aria-hidden="true"
+>
+  <div class="keyboard">
+    <div class="keyboard-keys">
+      {keyboard.map((key) => (
+        <i
+          class:list={{
+            "accent-key": key === "↵",
+            "animated-key": animatedKeys.includes(key),
+          }}
+          style={
+            animatedKeys.includes(key)
+              ? `animation-name: ${animationName(key)}`
+              : undefined
+          }
+        >
+          {key}
+        </i>
+      ))}
+      <div class="keyboard-last-row">
+        <i>ctrl</i>
+        <i>super</i>
+        <i
+          class="spacebar animated-key"
+          style={`animation-name: ${animationName(" ")}`}
+        />
+        <i>alt</i>
+        <i>ctrl</i>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .keyboard-scene {
+    --keyboard-left: clamp(40px, 8cqw, 100px);
+    --floor-x: calc((50cqw - var(--keyboard-left) - 150px) * 0.3045);
+    --floor-transform: translateX(var(--floor-x)) translateY(-12.3px)
+      translateZ(182.7px) rotateX(65deg) scale(0.6955);
+
+    display: grid;
+    place-items: center;
+    position: absolute;
+    bottom: 50px;
+    left: var(--keyboard-left);
+    width: 300px;
+    height: 225px;
+    perspective: 600px;
+    perspective-origin: calc(50cqw - var(--keyboard-left)) 15px;
+    z-index: 1;
+    transition: perspective-origin 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    transform-style: preserve-3d;
+  }
+
+  .keyboard-scene::before {
+    content: "";
+    position: absolute;
+    inset: -30px;
+  }
+
+  .keyboard {
+    width: 300px;
+    padding: 11px;
+    background: var(--ctp-surface0);
+    border: 1px solid var(--ctp-surface2);
+    border-radius: 9px;
+    box-shadow:
+      0 8px 0 var(--ctp-surface1),
+      0 9px 0 1px var(--ctp-overlay0);
+    transform: translateY(-3px) var(--floor-transform);
+    transform-style: preserve-3d;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 1;
+  }
+
+  .keyboard-scene:hover {
+    perspective-origin: 50% 50%;
+  }
+
+  .keyboard-scene:hover .keyboard {
+    transform: translateY(-35px) rotateX(32deg) rotateZ(-8deg) scale(140%);
+  }
+
+  .keyboard-keys {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 4px;
+  }
+
+  .keyboard i {
+    --key-shadow: var(--ctp-overlay0);
+
+    display: grid;
+    place-items: center;
+    height: 22px;
+    background: linear-gradient(140deg, var(--ctp-base), var(--ctp-mantle));
+    color: var(--ctp-text);
+    border: 1px solid var(--ctp-surface2);
+    border-radius: 3px;
+    box-shadow: 0 3px 0 var(--key-shadow);
+    font-size: 9px;
+    font-style: normal;
+  }
+
+  .keyboard .accent-key {
+    --key-shadow: var(--ctp-sapphire);
+
+    background: var(--ctp-blue);
+    color: var(--ctp-base);
+    border-color: var(--ctp-sapphire);
+  }
+
+  .keyboard .animated-key {
+    animation-duration: var(--typing-duration);
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+  }
+
+  .keyboard-last-row {
+    grid-column: 1/-1;
+    display: grid;
+    grid-template-columns: 1fr 1fr 6fr 1fr 1fr;
+    gap: 4px;
+    margin-top: 2px;
+  }
+
+  .keyboard-last-row i {
+    height: 25px;
+  }
+
+  .keyboard .spacebar {
+    background: var(--ctp-overlay2);
+  }
+
+  @media (orientation: portrait) {
+    .keyboard-scene {
+      display: none;
+    }
+  }
+</style>

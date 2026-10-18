@@ -1,0 +1,252 @@
+---
+import "./lamp-keyframes.css";
+import Keyboard from "./Keyboard.astro";
+---
+
+<div class="background">
+  <div class="bg-grid" aria-hidden="true" />
+
+  <Keyboard />
+
+  <label class="lamp">
+    <input id="theme-toggle" type="checkbox" />
+
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="172"
+      height="172"
+      viewBox="0 0 45.508 45.508"
+      aria-hidden="true"
+    >
+      <path
+        d="M16.325 36.129a6.45 6.45 0 0 0 6.43 5.921 6.45 6.45 0 0 0 6.428-5.921z"
+        style="fill:var(--ctp-yellow)"
+      />
+      <path
+        d="M22.754 23.227c-9.08 0-16.44 5.776-16.44 12.901h32.88c0-7.125-7.36-12.901-16.44-12.901"
+        style="fill:var(--ctp-red)"
+      />
+      <path
+        class="cable"
+        d="M22.754 23.597 C22.754 21 22.018 18.21 22.116 15.363 C22.211 12.563 23.149 11.026 23.265 8.237 C23.381 5.448 22.732 3.047 22.754 0"
+        style="fill:none;stroke:var(--ctp-red);stroke-width:.7937;stroke-linecap:round;stroke-linejoin:round"
+      />
+    </svg>
+  </label>
+</div>
+
+<style>
+  .background {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100svh;
+    width: 100%;
+    overflow: hidden;
+
+    /* lets the grid measure the scene's width with cqw */
+    container-type: inline-size;
+
+    /* lamp position fraction along the screen */
+    --lamp-x: 0.85;
+
+    /* distance from the ceiling to where the light lands */
+    --throw: calc(100svh - 120px);
+
+    /* the cone's width where it reaches the floor */
+    --beam-w: calc(124px + 1.1 * (var(--throw) - 136px));
+  }
+
+  /* --- grid --- */
+  .bg-grid {
+    position: absolute;
+    width: 180%;
+    height: 650px;
+    left: -40%;
+    bottom: -390px;
+    background-image:
+      linear-gradient(rgb(var(--ctp-mauve-rgb) / 25%) 1px, transparent 1px),
+      linear-gradient(
+        90deg,
+        rgb(var(--ctp-mauve-rgb) / 25%) 1px,
+        transparent 1px
+      );
+    background-size: 70px 70px;
+    transform: perspective(600px) rotateX(65deg);
+    transform-origin: center top;
+    mask-image: linear-gradient(transparent, black 35%);
+
+    /* pool radius in grid-plane px: half the beam width, divided by the ~1.5x perspective scale + trim for the soft edge */
+    --pool: calc(var(--beam-w) / 2.8);
+
+    /* where it lands on the plane, measured from the far edge */
+    --pool-y: 220px;
+
+    /* how far the pool travels: tan(9deg) * throw, divided by the ~1.5x perspective scale */
+    --sway: calc(var(--throw) * 0.1584 / 1.5);
+
+    /* the grid is centered on the scene, so slide the pool by the lamp's offset from the center (also / 1.5) */
+    --shift: calc((var(--lamp-x) - 0.5) * 100cqw / 1.5);
+  }
+
+  .bg-grid::before,
+  .bg-grid::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    mask-image: radial-gradient(
+      closest-side,
+      #000,
+      rgb(0 0 0 / 50%) 40%,
+      transparent
+    );
+    mask-size: calc(var(--pool) * 2) calc(var(--pool) * 2);
+    mask-repeat: no-repeat;
+    mask-position: calc(50% + var(--shift)) calc(var(--pool-y) - var(--pool));
+    animation: pool 4s ease-in-out infinite alternate;
+  }
+
+  /* lit up copy of the grid */
+  .bg-grid::before {
+    background-image:
+      linear-gradient(rgb(var(--ctp-yellow-rgb) / 90%) 1px, transparent 1px),
+      linear-gradient(
+        90deg,
+        rgb(var(--ctp-yellow-rgb) / 90%) 1px,
+        transparent 1px
+      );
+    background-size: 70px 70px;
+  }
+
+  /* pool of light */
+  .bg-grid::after {
+    background: rgb(var(--ctp-yellow-rgb));
+    opacity: 0.16;
+  }
+
+  @keyframes pool {
+    from {
+      mask-position: calc(50% + var(--shift) + var(--sway))
+        calc(var(--pool-y) - var(--pool));
+    }
+
+    to {
+      mask-position: calc(50% + var(--shift) - var(--sway))
+        calc(var(--pool-y) - var(--pool));
+    }
+  }
+
+  /* --- lamp --- */
+  .lamp {
+    position: absolute;
+    top: 0;
+    left: calc(var(--lamp-x) * 100%);
+    margin-left: -86px;
+    width: 172px;
+    height: 172px;
+    transform-origin: 50% 0;
+    animation: swing 4s ease-in-out infinite alternate;
+    cursor: pointer;
+  }
+
+  .lamp input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+
+  .lamp svg {
+    display: block;
+  }
+
+  @keyframes swing {
+    from {
+      transform: rotate(-9deg);
+    }
+
+    to {
+      transform: rotate(9deg);
+    }
+  }
+
+  /* halo around the bulb */
+  .lamp::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    left: 50%;
+    top: 150px;
+    width: 380px;
+    height: 380px;
+    margin: -190px 0 0 -190px;
+    background: radial-gradient(
+      circle,
+      rgb(var(--ctp-yellow-rgb) / 50%),
+      rgb(var(--ctp-yellow-rgb) / 12%) 35%,
+      transparent 65%
+    );
+  }
+
+  /* cone of light  */
+  .lamp::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    top: 136px;
+    left: 50%;
+    width: var(--beam-w);
+    height: calc(var(--throw) - 136px);
+    transform: translateX(-50%);
+    background: linear-gradient(
+      rgb(var(--ctp-yellow-rgb) / 32%),
+      rgb(var(--ctp-yellow-rgb) / 6%) 85%,
+      transparent
+    );
+    clip-path: polygon(
+      calc(50% - 62px) 0,
+      calc(50% + 62px) 0,
+      100% 100%,
+      0 100%
+    );
+    mask-image: linear-gradient(
+      90deg,
+      transparent,
+      #000 22%,
+      #000 78%,
+      transparent
+    );
+  }
+
+  .cable {
+    animation: flex calc(2 * 4s) linear infinite;
+  }
+
+  @media (orientation: portrait) {
+    .lamp,
+    .cable,
+    .bg-grid::before,
+    .bg-grid::after {
+      animation: none;
+    }
+  }
+
+  @media (orientation: portrait) {
+    .lamp::before,
+    .lamp::after,
+    .bg-grid::before,
+    .bg-grid::after {
+      display: none;
+    }
+
+    .lamp {
+      top: 0;
+      right: 0;
+      left: auto;
+      margin-left: 0;
+      transform-origin: top right;
+      scale: 0.35;
+      z-index: 999;
+    }
+  }
+</style>

@@ -1,0 +1,24 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --border-radius: 5px;
+}
+
+.shadow {
+  border: 2px solid var(--shadow-color);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow-color) 4px 4px;
+}
+
+.shadow.animated-shadow {
+  transition-property: box-shadow, translate;
+  transition-duration: 150ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.shadow.animated-shadow:hover {
+  translate: 4px 4px;
+  box-shadow: #0000 0 0;
+}

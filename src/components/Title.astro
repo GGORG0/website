@@ -1,0 +1,70 @@
+---
+const text = "GGORG";
+const chars = Array.from(text);
+---
+
+<div class="title-wrapper shadow animated-shadow">
+  <img
+    class="pfp"
+    src="/favicon.png"
+    width="70"
+    height="70"
+    alt="Profile picture"
+  />
+  <h1 class="title" style={`--last: ${chars.length - 1};`}>
+    {chars.map((c, idx) => (
+      <span style={`--idx: ${idx};`}>{c}</span>
+    ))}
+  </h1>
+</div>
+
+<style>
+  .title-wrapper {
+    background-color: var(--ctp-surface1);
+    padding: 6px 16px;
+
+    --shadow-color: var(--ctp-blue);
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  .pfp {
+    border-radius: var(--border-radius);
+  }
+
+  .title {
+    margin: 0;
+    font-size: 4.5rem;
+    text-align: center;
+    font-variation-settings: "MONO" 1;
+    color: var(--ctp-blue);
+    text-shadow: var(--ctp-overlay0) 0.075em 0.075em;
+
+    --cycle: 2s;
+    --step: 50ms;
+  }
+
+  .title span {
+    --shadow-offset: 0.075em;
+
+    font-weight: 650;
+    animation-name: pulse, pulse;
+    animation-duration: var(--cycle);
+    animation-iteration-count: infinite;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    animation-delay:
+      calc(var(--idx) * var(--step)),
+      calc(var(--cycle) / 2 + (var(--last) - var(--idx)) * var(--step));
+  }
+
+  @keyframes pulse {
+    0% {
+      font-weight: 700;
+      filter: brightness(1.1);
+    }
+  }
+</style>

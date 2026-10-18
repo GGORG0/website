@@ -1,8 +1,14 @@
 ---
-import Welcome from "../components/Welcome.astro";
 import Layout from "../layouts/Layout.astro";
+import Welcome from "../components/Welcome.astro";
+import Background from "../components/Background.astro";
+
+import "@catppuccin/palette/css/catppuccin.css";
+import "../styles/catppuccin.css";
+import "../styles/globals.css";
 ---
 
 <Layout>
+  <Background />
   <Welcome />
 </Layout>

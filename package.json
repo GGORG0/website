@@ -19,6 +19,7 @@
     "prepare": "husky"
   },
   "dependencies": {
+    "@catppuccin/palette": "^1.8.0",
     "astro": "^7.3.8"
   },
   "devDependencies": {
