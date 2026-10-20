@@ -25,4 +25,6 @@ export default defineConfig({
   ],
 
   integrations: [icon()],
+
+  site: "https://ggorg.xyz",
 });
