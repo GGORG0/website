@@ -1,41 +1,14 @@
 ---
 import Title from "./Title.astro";
+import Personal from "./Personal.astro";
+import Links from "./Links.astro";
 ---
 
 <main class="container shadow">
   <div class="mainbox">
     <Title />
-    <section id="personal">
-      <ul>
-        <li>🇵🇱 Grzegorz / 🇬🇧 Gregory, he/him</li>
-        <li>Programmer, high school student from Poland</li>
-      </ul>
-    </section>
-    <section id="links">
-      <ul>
-        <li>
-          <a href="https://signal.me/#eu/mwM1PJajXlXp4P0eb7gkFticyCgHOu2yzkzRw68TZ9De-lvWgqBGrJmB8OWNvrjz">
-            Signal: @ggorg.01
-          </a>
-        </li>
-        <li>
-          <a href="https://matrix.to/#/@ggorg:matrix.org">
-            Matrix: @ggorg:matrix.org
-          </a>
-        </li>
-        <li>
-          <a href="https://discord.com/users/819845763848601611">
-            Discord: @ggorg
-          </a>
-        </li>
-        <li>
-          <a href="https://github.com/GGORG0">GitHub: GGORG0</a>
-        </li>
-        <li>
-          <a href="mailto:me@ggorg.xyz">Email: me@ggorg.xyz</a>
-        </li>
-      </ul>
-    </section>
+    <Personal />
+    <Links />
     <footer>
       <ul>
         <li>This website contains no JavaScript.</li>
@@ -78,15 +51,12 @@ import Title from "./Title.astro";
     gap: 1.25em;
   }
 
-  ul {
+  /* stylelint-disable selector-pseudo-class-no-unknown */
+  .mainbox :global(ul) {
     list-style-type: none;
     padding-left: 0;
     margin: 0;
     line-height: 1.4;
-  }
-
-  a {
-    color: inherit;
   }
 
   footer {

@@ -1,0 +1,56 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
+<section id="links">
+  <ul>
+    <li>
+      <a href="https://signal.me/#eu/mwM1PJajXlXp4P0eb7gkFticyCgHOu2yzkzRw68TZ9De-lvWgqBGrJmB8OWNvrjz">
+        <Icon name="tabler:brand-signal" />
+        <span>@ggorg.01</span>
+      </a>
+    </li>
+    <li>
+      <a href="https://matrix.to/#/@ggorg:matrix.org">
+        <Icon name="tabler:brand-matrix" />
+        <span>@ggorg:matrix.org</span>
+      </a>
+    </li>
+    <li>
+      <a href="https://discord.com/users/819845763848601611">
+        <Icon name="tabler:brand-discord" />
+        <span>@ggorg</span>
+      </a>
+    </li>
+    <li>
+      <a href="https://github.com/GGORG0">
+        <Icon name="tabler:brand-github" />
+        <span>GGORG0</span>
+      </a>
+    </li>
+    <li>
+      <a href="mailto:me@ggorg.xyz">
+        <Icon name="tabler:mail" />
+        <span>me@ggorg.xyz</span>
+      </a>
+    </li>
+  </ul>
+</section>
+
+<style>
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25em;
+    text-decoration: none;
+  }
+
+  a span {
+    text-decoration: underline;
+  }
+
+  a [data-icon] {
+    width: 1.5em;
+    height: 1.5em;
+  }
+</style>

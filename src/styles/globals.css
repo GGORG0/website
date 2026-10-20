@@ -22,3 +22,11 @@
   translate: 4px 4px;
   box-shadow: #0000 0 0;
 }
+
+a {
+  color: inherit;
+}
+
+.emoji {
+  font-family: var(--font-emoji);
+}
