@@ -80,7 +80,7 @@ const typingKeyframes = animatedKeys
 
 <style>
   .keyboard-scene {
-    --keyboard-left: clamp(40px, 8cqw, 100px);
+    --keyboard-left: calc(100cqw / 3 - 150px);
     --floor-x: calc((50cqw - var(--keyboard-left) - 150px) * 0.3045);
     --floor-transform: translateX(var(--floor-x)) translateY(-12.3px)
       translateZ(182.7px) rotateX(65deg) scale(0.6955);
@@ -94,8 +94,10 @@ const typingKeyframes = animatedKeys
     height: 225px;
     perspective: 600px;
     perspective-origin: calc(50cqw - var(--keyboard-left)) 15px;
-    z-index: 1;
-    transition: perspective-origin 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 0;
+    transition:
+      perspective-origin 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+      z-index 0s 0.6s;
     transform-style: preserve-3d;
   }
 
@@ -122,6 +124,8 @@ const typingKeyframes = animatedKeys
 
   .keyboard-scene:hover {
     perspective-origin: 50% 50%;
+    z-index: 1;
+    transition-delay: 0s;
   }
 
   .keyboard-scene:hover .keyboard {
